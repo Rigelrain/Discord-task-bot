@@ -12,20 +12,20 @@ module.exports = {
 
         const taskUser = args.shift();
 
-        Task.find({user: taskUser})
-        .select('task ID')
-        .exec((err, docs) => {
-            if (err) {
-                return message.reply("Couldn't get your tasks, sorry!");
-            }
+        Task.find({ user: taskUser })
+            .select("task ID")
+            .exec((err, docs) => {
+                if (err) {
+                    return message.reply("Couldn't get your tasks, sorry!");
+                }
 
-            let output = "";
-            for(entry in docs) {
-                output += `ID ${docs[entry].ID}: ${docs[entry].task}\n`;
-            }
+                let output = "";
+                for(const entry in docs) {
+                    output += `ID ${docs[entry].ID}: ${docs[entry].task}\n`;
+                }
 
-            //console.log(output);
-            return message.reply(`Here are the tasks for ${taskUser}:\n${output}`);
-        });
-    }
+                // console.log(output);
+                return message.reply(`Here are the tasks for ${taskUser}:\n${output}`);
+            });
+    },
 };

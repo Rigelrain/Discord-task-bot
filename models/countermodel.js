@@ -6,9 +6,9 @@ const Schema = mongoose.Schema;
 
 // the schema for tasks
 const counterSchema = new Schema({
-    _id: {type: String, required: true},
+    _id: { type: String, required: true },
     COUNT: Number,
-    NOTES: String
+    NOTES: String,
 });
 
 // model for tasks

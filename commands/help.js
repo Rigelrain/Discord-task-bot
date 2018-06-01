@@ -8,7 +8,7 @@ module.exports = {
     cooldown: 5,
     execute(message, args) {
         console.log("Help wanted!");
-        console.log("Args length: " + args.length)
+        console.log("Args length: " + args.length);
 
         const { commands } = message.client;
         const data = [];
@@ -22,21 +22,21 @@ module.exports = {
             if (!commands.has(args[0])) {
                 return message.reply("That's not a valid command, sorry.");
             }
-            
+
             const command = commands.get(args[0]);
-            
+
             data.push(`**Name:** ${command.name}`);
-            
+
             if (command.description) data.push(`**Description:** ${command.description}`);
-            if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
+            if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(", ")}`);
             if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
-            
+
             data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
         }
 
         message.author.send(data.join("\n"), { split: true })
             .then(() => {
-                if (message.channel.type !== 'dm') {
+                if (message.channel.type !== "dm") {
                     message.channel.send("I've sent you a DM with all my commands.");
                 }
             })

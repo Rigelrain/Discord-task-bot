@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 // the schema for tasks
 const taskSchema = new Schema({
-    user: {type: String, required: true},
+    user: { type: String, required: true },
     task: String,
     ID: Number,
 });

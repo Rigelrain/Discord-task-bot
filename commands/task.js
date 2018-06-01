@@ -10,37 +10,37 @@ module.exports = {
     execute(message, args) {
         console.log("Task to be sent!");
 
-        let taskUser = args.shift();
-        let taskDescription = args.join(" ");
+        const taskUser = args.shift();
+        const taskDescription = args.join(" ");
         let taskID;
-        
+
         // first get the next available ID from db
-        Counter.findOne({_id: "taskcounter"})
-        .exec()
-        .then((counter) => {
-            taskID = counter.COUNT;
-        })
-        .then(() => {
+        Counter.findOne({ _id: "taskcounter" })
+            .exec()
+            .then((counter) => {
+                taskID = counter.COUNT;
+            })
+            .then(() => {
 
-            // increment an ID for the next task
-            Counter.findById("taskcounter", (err, counter) => {
-                if(err) {
-                    console.log("Can't update the ID counter :(");
-                }
-                counter.COUNT++;
-                counter.save();
+                // increment an ID for the next task
+                Counter.findById("taskcounter", (err, counter) => {
+                    if(err) {
+                        console.log("Can't update the ID counter :(");
+                    }
+                    counter.COUNT++;
+                    counter.save();
+                });
+
+                // make and save the task to database
+                const task = new Task({ user: taskUser, task: taskDescription, ID: taskID });
+
+                task.save((err) => {
+                    if(err) {
+                        return message.reply("Something went wrong with adding the task: " + err);
+                    }
+
+                    return message.reply(`Added task "${taskDescription}" for user ${taskUser}. Get back to this task by calling its ID: ${taskID}`);
+                });
             });
-
-            // make and save the task to database
-            let task = new Task({user: taskUser, task: taskDescription, ID: taskID});
-
-            task.save((err) => {
-                if(err) {
-                    return message.reply("Something went wrong with adding the task: " + err);
-                }
-
-                return message.reply(`Added task "${taskDescription}" for user ${taskUser}. Get back to this task by calling its ID: ${taskID}`);
-            });
-        });
-    }
+    },
 };

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token, dbUsername, dbPassword } = require("./config.json");
+const { prefix, token, dbUsername, dbPassword, dbAddress } = require("./config.json");
 
 // create app
 const client = new Discord.Client();
@@ -9,14 +9,14 @@ const cooldowns = new Discord.Collection();
 
 // database
 const mongoose = require("mongoose");
-const mongoDB = "mongodb://" + dbUsername +  ":" + dbPassword + "@ds255319.mlab.com:55319/aioni-tasks";
+const mongoDB = "mongodb://" + dbUsername + ":" + dbPassword + "@" + dbAddress;
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
-let db = mongoose.connection;
+const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error: "));
 // end of database shenanigans
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
@@ -36,7 +36,7 @@ client.on("message", message => {
     // don't listen to anything not tagged with the prefix
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    // extract the command's name as the 
+    // extract the command's name as the
     // first word of the string after prefix
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -59,20 +59,20 @@ client.on("message", message => {
         let reply = "You didn't provide any arguments, " + message.author + "!";
 
         if (command.usage) {
-        reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+            reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
         }
 
-        return message.channel.send(reply)
+        return message.channel.send(reply);
     }
 
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());
     }
-    
+
     const now = Date.now();
     const timestamps = cooldowns.get(command.name);
     const cooldownAmount = (command.cooldown || 3) * 1000;
-    
+
     if (!timestamps.has(message.author.id)) {
         timestamps.set(message.author.id, now);
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
@@ -84,7 +84,7 @@ client.on("message", message => {
             const timeLeft = (expirationTime - now) / 1000;
             return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
         }
-    
+
         timestamps.set(message.author.id, now);
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
@@ -95,7 +95,7 @@ client.on("message", message => {
     }
     catch (error) {
         console.error(error);
-        message.reply('there was an error trying to execute that command!');
+        message.reply("there was an error trying to execute that command!");
     }
 });
 
