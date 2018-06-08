@@ -1,5 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
+// const {prefix, token, dbUsername, dbPassword, dbAddress} = require(./config.json);
 const prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 const dbUsername = process.env.DB_USERNAME;
