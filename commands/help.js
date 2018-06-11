@@ -7,9 +7,6 @@ module.exports = {
     usage: "[command name]",
     cooldown: 5,
     execute(message, args) {
-        console.log("Help wanted!");
-        console.log("Args length: " + args.length);
-
         const { commands } = message.client;
         const data = [];
 

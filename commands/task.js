@@ -8,8 +8,6 @@ module.exports = {
     args: true,
     cooldown: 1,
     execute(message, args) {
-        console.log("Task to be sent!");
-
         const taskUser = args.shift();
         const taskDescription = args.join(" ");
         let taskID;

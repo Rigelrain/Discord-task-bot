@@ -8,8 +8,6 @@ module.exports = {
     args: true,
     cooldown: 1,
     execute(message, args) {
-        console.log("Task to be fetched!");
-
         const taskUser = args.shift();
 
         Task.find({ user: taskUser })

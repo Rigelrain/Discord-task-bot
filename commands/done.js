@@ -8,8 +8,6 @@ module.exports = {
     args: true,
     cooldown: 1,
     execute(message, args) {
-        console.log("Task to be deleted!");
-
         const taskID = parseInt(args.shift());
 
         Task.findOneAndDelete({ ID: taskID })
@@ -17,7 +15,7 @@ module.exports = {
                 if (err) {
                     return message.reply("Couldn't check that task as done, sorry!");
                 }
-                console.log(docs);
+                console.log("Deleted:" + docs);
 
                 return message.reply("Task marked as done and deleted from database!");
             });
