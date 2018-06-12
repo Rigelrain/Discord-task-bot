@@ -37,7 +37,7 @@ module.exports = {
                         return message.reply("Something went wrong with adding the task: " + err);
                     }
 
-                    return message.reply(`Added task "${taskDescription}" for user ${taskUser}. Get back to this task by calling its ID: ${taskID}`);
+                    return message.reply(`Added task "${taskDescription}" for user ${taskUser}. Mark this done by calling its ID: ${taskID}`);
                 });
             });
     },
