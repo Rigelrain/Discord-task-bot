@@ -9,8 +9,9 @@ module.exports = {
     cooldown: 1,
     execute(message, args) {
         const taskUser = args.shift();
+        const taskUserLowcase = taskUser.toLowerCase();
 
-        if(taskUser == "All") {
+        if(taskUserLowcase == "all") {
             // return all tasks
             Task.find({})
                 .select("user task ID")
@@ -30,16 +31,26 @@ module.exports = {
                 });
         }
         else {
-            Task.find({ user: taskUser })
-                .select("task ID")
+            Task.find({
+                $or: [
+                    { user: taskUserLowcase },
+                    { user : "all" },
+                ] })
+                .select("user task ID")
                 .exec((err, docs) => {
                     if (err) {
                         return message.reply("Couldn't get your tasks, sorry!");
                     }
 
                     let output = "";
+
                     for(const entry in docs) {
-                        output += `ID ${docs[entry].ID}: ${docs[entry].task}\n`;
+                        if(docs[entry].user == "all") {
+                            output += `For All: ID ${docs[entry].ID}: ${docs[entry].task}\n`;
+                        }
+                        else {
+                            output += `For ${taskUser}: ID ${docs[entry].ID}: ${docs[entry].task}\n`;
+                        }
                     }
 
                     // console.log(output);

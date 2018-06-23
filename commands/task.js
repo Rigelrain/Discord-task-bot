@@ -9,6 +9,7 @@ module.exports = {
     cooldown: 1,
     execute(message, args) {
         const taskUser = args.shift();
+        const taskUserLowcase = taskUser.toLowerCase();
         const taskDescription = args.join(" ");
         let taskID;
 
@@ -30,7 +31,7 @@ module.exports = {
                 });
 
                 // make and save the task to database
-                const task = new Task({ user: taskUser, task: taskDescription, ID: taskID });
+                const task = new Task({ user: taskUserLowcase, task: taskDescription, ID: taskID });
 
                 task.save((err) => {
                     if(err) {
