@@ -43,18 +43,26 @@ module.exports = {
                     }
 
                     let output = "";
+                    let outputChanged = false;
 
                     for(const entry in docs) {
                         if(docs[entry].user == "all") {
                             output += `For All: ID ${docs[entry].ID}: ${docs[entry].task}\n`;
+                            outputChanged = true;
                         }
                         else {
                             output += `For ${taskUser}: ID ${docs[entry].ID}: ${docs[entry].task}\n`;
+                            outputChanged = true;
                         }
                     }
 
-                    // console.log(output);
-                    return message.reply(`Here are the tasks for ${taskUser}:\n${output}`);
+                    if(outputChanged == true) {
+                        // console.log(output);
+                        return message.reply(`Here are the tasks for ${taskUser}:\n${output}`);
+                    }
+                    else {
+                        return message.reply("No tasks for you, good job!");
+                    }
                 });
         }
     },

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token, dbUsername, dbPassword, dbAddress } = require("./config.json");
+const { prefix, token2, dbUsername, dbPassword, dbAddress } = require("./config.json");
 
 /**
  * const prefix = process.env.PREFIX;
@@ -107,4 +107,4 @@ client.on("message", message => {
     }
 });
 
-client.login(token);
+client.login(token2);
