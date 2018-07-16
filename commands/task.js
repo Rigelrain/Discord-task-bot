@@ -40,6 +40,9 @@ module.exports = {
 
                     return message.reply(`Added task "${taskDescription}" for user ${taskUser}. Mark this done by calling its ID: ${taskID}`);
                 });
+            })
+            .catch((err) => {
+                console.log(err);
             });
     },
 };
