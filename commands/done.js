@@ -12,8 +12,8 @@ module.exports = {
 
         Task.findOneAndDelete({ ID: taskID })
             .exec()
-            .then((docs) => {
-                console.log("Deleted:" + docs);
+            .then(() => {
+                // console.log("Deleted:" + docs);
 
                 return message.reply("Task marked as done and deleted from database!");
             })
