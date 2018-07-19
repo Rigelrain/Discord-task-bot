@@ -15,19 +15,20 @@ module.exports = {
             // return all tasks
             Task.find({})
                 .select("user task ID")
-                .exec((err, docs) => {
-                    if(err) {
-                        return message.reply("Couldn't get the tasks, sorry!");
-                    }
-
+                .exec()
+                .then((docs) => {
                     let output = "";
                     for(const entry in docs) {
                         output += `${docs[entry].user} - ID ${docs[entry].ID}: ${docs[entry].task}\n`;
                     }
 
                     // console.log(output);
-                    return message.reply(`Here are the tasks for ${taskUser}:\n${output}`);
+                    return message.reply(`Here are the tasks for ${taskUser}:\n${output}`, { split: true });
 
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return message.reply("Couldn't get the tasks, sorry!");
                 });
         }
         else {
@@ -37,11 +38,8 @@ module.exports = {
                     { user : "all" },
                 ] })
                 .select("user task ID")
-                .exec((err, docs) => {
-                    if (err) {
-                        return message.reply("Couldn't get your tasks, sorry!");
-                    }
-
+                .exec()
+                .then((docs) => {
                     let output = "";
                     let outputChanged = false;
 
@@ -58,11 +56,15 @@ module.exports = {
 
                     if(outputChanged == true) {
                         // console.log(output);
-                        return message.reply(`Here are the tasks for ${taskUser}:\n${output}`);
+                        return message.reply(`Here are the tasks for ${taskUser}:\n${output}`, { split: true });
                     }
                     else {
                         return message.reply("No tasks for you, good job!");
                     }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return message.reply("Couldn't get the tasks, sorry!");
                 });
         }
     },

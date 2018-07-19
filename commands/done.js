@@ -11,13 +11,15 @@ module.exports = {
         const taskID = parseInt(args.shift());
 
         Task.findOneAndDelete({ ID: taskID })
-            .exec((err, docs) => {
-                if (err) {
-                    return message.reply("Couldn't check that task as done, sorry!");
-                }
+            .exec()
+            .then((docs) => {
                 console.log("Deleted:" + docs);
 
                 return message.reply("Task marked as done and deleted from database!");
+            })
+            .catch((err) => {
+                console.log(err);
+                return message.reply("Couldn't check that task as done, sorry!");
             });
     },
 };
