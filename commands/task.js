@@ -4,12 +4,14 @@ const Counter = require("../models/countermodel.js");
 module.exports = {
     name: "task",
     description: "Collects a task to send to database.",
-    usage: "[responsible] [task]",
+    usage: "[responsible] [deadline] [importance] [task] ",
     args: true,
     cooldown: 1,
     execute(message, args) {
         const taskUser = args.shift();
         const taskUserLowcase = taskUser.toLowerCase();
+        const taskDeadline = args.shift().toLowerCase();
+        const taskImportance = args.shift().toLowerCase();
         const taskDescription = args.join(" ");
         let taskID;
 
@@ -31,7 +33,13 @@ module.exports = {
                 });
 
                 // make and save the task to database
-                const task = new Task({ user: taskUserLowcase, task: taskDescription, ID: taskID });
+                const task = new Task({
+                    user: taskUserLowcase,
+                    task: taskDescription,
+                    deadline: taskDeadline,
+                    importance: taskImportance,
+                    ID: taskID,
+                });
 
                 task.save((err) => {
                     if(err) {

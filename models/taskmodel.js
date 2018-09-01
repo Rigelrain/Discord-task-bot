@@ -8,6 +8,8 @@ const Schema = mongoose.Schema;
 const taskSchema = new Schema({
     user: { type: String, required: true },
     task: String,
+    deadline: String,
+    importance: String,
     ID: Number,
 });
 
