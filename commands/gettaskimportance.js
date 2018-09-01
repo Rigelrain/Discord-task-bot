@@ -3,7 +3,7 @@ const Task = require("../models/taskmodel.js");
 module.exports = {
     name: "gettaskimportance",
     description: "Returns all tasks by given importance: Critical, High, Medium, Minor",
-    aliases: ["fetchimportance", "getimportance"],
+    aliases: ["fetchimportance", "getimportance", "getpriority", "fetchpriority"],
     usage: "[importance]",
     args: true,
     cooldown: 1,
