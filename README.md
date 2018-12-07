@@ -4,7 +4,9 @@ More commands can be added by following the same structure as with the commands 
 
 # Table of Contents
 * Prerequisites
-* Config
+* Configuration
+* Set up
+* Build / Run
 
 # Prerequisites
 You must have the following installed:

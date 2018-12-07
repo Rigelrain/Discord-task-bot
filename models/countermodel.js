@@ -1,4 +1,4 @@
-// file: ../models/taskmodel.js
+// file: ../models/countermodel.js
 
 const mongoose = require("mongoose");
 
