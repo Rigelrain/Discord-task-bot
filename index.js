@@ -1,6 +1,11 @@
 const fs = require("fs");
 const Discord = require("discord.js");
 const { prefix, token, dbUsername, dbPassword, dbAddress } = require("./config.json");
+// const reminder = require("./js/sendreminder");
+
+// mongoose models
+const Remind = require("./models/remindmodel.js");
+const User = require("./models/usermodel.js");
 
 /**
  * const prefix = process.env.PREFIX;
@@ -24,6 +29,7 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error: "));
 // end of database shenanigans
 
+// commands
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 
 for (const file of commandFiles) {
@@ -33,6 +39,72 @@ for (const file of commandFiles) {
     // with the key as the command name and the value as the exported module
     client.commands.set(command.name, command);
 }
+// end commands
+
+// sending reminders
+let reminders = [];
+
+setTimeout(findReminders, 5000);
+setInterval(sendReminders, 10000);
+
+function findReminders() {
+    // clear out previous reminders
+    reminders = [];
+    User.find({})
+        .select("-_id user")
+        .lean()
+        .exec()
+        .then(docs => {
+            if(docs.length == 0) {
+                console.log("No users found.");
+                return Promise.reject();
+            }
+            else {
+                const promises = [];
+
+                for(let i = 0; i < docs.length; i++) {
+                    promises.push(Remind.find({ user: docs[i].user })
+                        .select("-_id user message")
+                        .exec());
+                }
+
+                return Promise.all(promises);
+            }
+        })
+        .then(result => {
+            const promises = [];
+
+            for (let i = 0; i < result.length; i++) {
+                reminders.push({ user: result[i][0].user, messages: [] });
+
+                for (let j = 0; j < result[i].length; j++) {
+                    reminders[i].messages.push(result[i][j].message);
+                }
+            }
+
+            console.log("reminders after setting: ");
+            console.log(reminders);
+
+            return Promise.all(promises);
+        })
+        .catch(err => console.log("Error in finding users: " + err));
+}
+
+function sendReminders() {
+    // exit early if no reminders
+    if(reminders.length == 0) { return; }
+
+    for (let i = 0; i < 1; i++) {
+        const user = client.users.find("username", reminders[i].user);
+
+        for (let j = 0; j < reminders[i].messages.length; j++) {
+            user.send("Just to remind you: " + reminders[i].messages[j] + " \nMark this done by reacting with a :thumbsup:!", { split: true })
+                .catch(err => console.log("Error sending msg: " + err));
+        }
+    }
+    // console.log(reminders);
+}
+// end reminder shenanigans
 
 // startup
 client.on("ready", () => {

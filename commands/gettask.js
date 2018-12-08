@@ -15,6 +15,7 @@ module.exports = {
             // return all tasks
             Task.find({})
                 .select("user task deadline importance ID")
+                .lean()
                 .exec()
                 .then((docs) => {
                     let output = "";
@@ -38,6 +39,7 @@ module.exports = {
                     { user : "all" },
                 ] })
                 .select("user task deadline importance ID")
+                .lean()
                 .exec()
                 .then((docs) => {
                     let output = "";

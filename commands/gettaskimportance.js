@@ -13,6 +13,7 @@ module.exports = {
 
         Task.find({ importance: taskImportanceLowcase })
             .select("user task deadline ID")
+            .lean()
             .exec()
             .then((docs) => {
                 let output = "";

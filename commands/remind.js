@@ -4,19 +4,12 @@ const User = require("../models/usermodel.js");
 module.exports = {
     name: "remind",
     description: "Sets a reminder for a given message and will alert you with it in PM daily until you react to it with a :thumbsup:, :+1: or :thumbup:",
-    aliases: ["reminder"],
+    aliases: ["reminder", "remindme"],
     usage: "[message]",
     args: true,
     cooldown: 1,
     execute(message, args) {
-        let user;
-
-        if(message.channel.type === "text") {
-            user = message.author.ID;
-        }
-        else if(message.channel.type === "dm") {
-            user = message.channel.recipient;
-        }
+        const user = message.author.username;
 
         // exit early on user-error
         if(!user) return message.reply("No user found, sorry!");
