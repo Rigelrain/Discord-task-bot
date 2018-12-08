@@ -43,9 +43,10 @@ for (const file of commandFiles) {
 
 // sending reminders
 let reminders = [];
+const interval = 86400000;
 
-setTimeout(findReminders, 5000);
-setInterval(sendReminders, 10000);
+setTimeout(findReminders, interval);
+setInterval(sendReminders, interval);
 
 function findReminders() {
     // clear out previous reminders
@@ -64,7 +65,7 @@ function findReminders() {
 
                 for(let i = 0; i < docs.length; i++) {
                     promises.push(Remind.find({ user: docs[i].user })
-                        .select("-_id user message")
+                        .select("_id user message")
                         .exec());
                 }
 
@@ -78,7 +79,7 @@ function findReminders() {
                 reminders.push({ user: result[i][0].user, messages: [] });
 
                 for (let j = 0; j < result[i].length; j++) {
-                    reminders[i].messages.push(result[i][j].message);
+                    reminders[i].messages.push({ id: result[i][j]._id, message: result[i][j].message });
                 }
             }
 
@@ -95,14 +96,31 @@ function sendReminders() {
     if(reminders.length == 0) { return; }
 
     for (let i = 0; i < 1; i++) {
-        const user = client.users.find("username", reminders[i].user);
+        const remindUser = client.users.find("username", reminders[i].user);
+
+        const filter = (reaction, user) => {
+            return reaction.emoji.name === "👍" && user.id === remindUser.id;
+        };
 
         for (let j = 0; j < reminders[i].messages.length; j++) {
-            user.send("Just to remind you: " + reminders[i].messages[j] + " \nMark this done by reacting with a :thumbsup:!", { split: true })
-                .catch(err => console.log("Error sending msg: " + err));
+            remindUser.send(`Just to remind you: ${reminders[i].messages[j].message} \nMark this done by reacting with a :thumbsup:!`, { split: true })
+                .then(msg => {
+                    return msg.awaitReactions(filter, { max: 1, time: interval - 10000, errors: ["time"] });
+                })
+                .then(() => {
+                    // delete the reminder from database
+                    console.log("This reminder with ID "
+                        + reminders[i].messages[j].id
+                        + "will be deleted: "
+                        + reminders[i].messages[j].message);
+                    return Remind.findByIdAndDelete(reminders[i].messages[j].id);
+                })
+                .then(() => {
+                    console.log("Reminder deleted successfully!");
+                })
+                .catch(err => console.log("Error in reminder handling: " + err));
         }
     }
-    // console.log(reminders);
 }
 // end reminder shenanigans
 
@@ -175,7 +193,7 @@ client.on("message", message => {
     }
     catch (error) {
         console.error(error);
-        message.reply("there was an error trying to execute that command!");
+        message.reply("There was an error trying to execute that command!");
     }
 });
 

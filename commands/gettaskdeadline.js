@@ -34,7 +34,8 @@ module.exports = {
             })
             .catch((err) => {
                 console.log(err);
-                return message.reply("Couldn't get the tasks, sorry!");
+                return message.reply("Couldn't get the tasks, sorry!")
+                    .catch(err => console.log(err));
             });
     },
 };

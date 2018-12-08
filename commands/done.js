@@ -19,7 +19,8 @@ module.exports = {
             })
             .catch((err) => {
                 console.log(err);
-                return message.reply("Couldn't check that task as done, sorry!");
+                return message.reply("Couldn't check that task as done, sorry!")
+                    .catch(err => console.log(err));
             });
     },
 };
