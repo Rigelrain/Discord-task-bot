@@ -29,6 +29,23 @@ Use the *config-template.json* and make a copy of it in the same directory, then
 Copy the project into the directory of your choosing. Open your terminal and get the dependencies through npm:
 > npm install
 
+## Database
+Just to be safe, create following collections into your database:
+* counters
+* reminds
+* tasks
+* users
+
+In the counter-collection, make an entry:
+```
+{
+    "_id": "taskcounter",
+    "COUNT": 0,
+    "NOTES": "Increment COUNT using findByIDAndUpdate to ensure that the COUNT field will be incremented atomically with the fetch of this document"
+}
+```
+This will initialize the counter.
+
 # Build / Run
 
 Starting the server:
@@ -36,3 +53,19 @@ Starting the server:
 
 Or using nodemon you can use:
 > npm start
+
+# Use
+
+When deployed, the bot can help with its basic commands when a user requests it with a "!help" command. (Prefix can be changed in the config.)
+
+You can add more commands into the commands folder, use the old ones as a template. For each ready-made command, you can add more aliases (so that your users can use the same functionality with other command-words).
+
+## Tasks
+Users can add tasks to a database using a command "!task". There are several different ways to retrieve the tasks, either by user, deadline or priority. See the taskmodel-Schema for details.
+
+## Reminders
+Users can give themselves reminders using the !remind command. The command will create the reminder message into the database.
+
+Once per day, the bot will fetch all reminders from the database and send them as DMs to users (if they haven't blocked the bot). The user must react to the message to delete it from the database and stop getting the reminder.
+
+The actual reminding code is in the index.js file.
